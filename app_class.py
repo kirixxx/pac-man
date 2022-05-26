@@ -154,7 +154,7 @@ class App:
                              w,
                              200,
                              45,
-                             text='playing',
+                             text='play',
                              textColour=PLAYER_COLOR,
                              font=pygame.font.Font('fonts/emulogic.ttf', 23),
                              fontSize=23,
