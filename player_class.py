@@ -19,6 +19,7 @@ class Player:
         self.speed = 1
         self.lives = 1
         self.die = False
+        self.music_berry = False
 
 
     def update(self):
@@ -100,8 +101,9 @@ class Player:
         return False
 
     def eat_coin(self):
-        pygame.mixer.music.load('music/credit.wav')
-        pygame.mixer.music.play(1)
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.load('music/credit.wav')
+            pygame.mixer.music.play(1)
         self.app.coins.remove(self.grid_pos)
         self.current_score += 1
 
@@ -116,13 +118,13 @@ class Player:
         return False
 
     def eat_big_coin(self):
-        pygame.mixer.music.load('music/credit.wav')
-        pygame.mixer.music.play(1)
+        pygame.mixer.music.load('music/berry.wav')
+        pygame.mixer.music.play(2)
         self.app.big_coins.remove(self.grid_pos)
         self.current_score += 5
 
     def eat_ghost(self):
-        pygame.mixer.music.load('music/credit.wav')
+        pygame.mixer.music.load('music/ghost_eat.wav')
         pygame.mixer.music.play(1)
         self.current_score += 10
 

@@ -28,6 +28,7 @@ class App:
         self.p_pos = None
         self.ghost_personalities = None
         self.background = None
+        pygame.mixer.music.set_volume(0.5)
 
         with open("data_file.json", "r") as read_file:
             self.leaders_list = json.load(read_file)
