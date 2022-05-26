@@ -1,0 +1,4 @@
+[{"personality": "speedy", "speed": 1},
+  {"personality": "slow", "speed": 0.7},
+  {"personality": "random", "speed": 1},
+  {"personality": "scared", "speed": 1}]
