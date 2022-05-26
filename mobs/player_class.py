@@ -1,6 +1,6 @@
 import pygame.draw
 import pygame.math
-from settings import *
+from settings.settings import *
 vec = pygame.math.Vector2
 pygame.mixer.init()
 

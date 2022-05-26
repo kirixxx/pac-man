@@ -2,9 +2,9 @@ import json
 import sys
 import pygame_widgets
 from pygame_widgets.button import Button
-from player_class import *
-from enemy_class import *
-from leaders_class import Leader
+from mobs.player_class import *
+from mobs.enemy_class import *
+from mobs.leaders_class import Leader
 
 pygame.init()
 pygame.mixer.init()
@@ -30,7 +30,7 @@ class App:
         self.background = None
         pygame.mixer.music.set_volume(0.5)
 
-        with open("data_file.json", "r") as read_file:
+        with open("settings/data_file.json", "r") as read_file:
             self.leaders_list = json.load(read_file)
         self.lead = Leader(self.leaders_list)
 
@@ -91,12 +91,12 @@ class App:
         screen.blit(text, position)
 
     def load(self):
-        self.background = pygame.image.load('background.png')
+        self.background = pygame.image.load('images/background.png')
         self.background = pygame.transform.scale(self.background, (MAZE_WIDTH, MAZE_HEIGHT))
 
         # Загрузка карты с фалйа
         # Создание стен с координатами
-        with open("walls.txt", 'r') as file:
+        with open("settings/walls.txt", 'r') as file:
             for yIdx, line in enumerate(file):
                 for xIdx, char in enumerate(line):
                     if char == '1':
@@ -115,7 +115,7 @@ class App:
         # print(self.walls)
 
     def make_enemies(self):
-        with open('ghost_personality.json') as personalities:
+        with open('settings/ghost_personality.json') as personalities:
             self.ghost_personalities = json.load(personalities)
         for idx, pos in enumerate(self.e_pos):
             self.enemies.append(Enemy(self, vec(pos), self.ghost_personalities[idx]))

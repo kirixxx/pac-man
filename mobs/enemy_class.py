@@ -1,6 +1,6 @@
 import pygame
 import random
-from settings import *
+from settings.settings import *
 
 vec = pygame.math.Vector2
 
