@@ -75,9 +75,6 @@ class Enemy:
 
             # здесь глазки бегущие на базу
         if not self.eatable and not self.eaten:
-            if self.image_count >= 39:
-                self.image_count = 0
-            print(self.last_x - self.pix_pos[0])
             if self.last_x - self.pix_pos[0] < 0:
                 self.app.screen.blit(self.colour[1], (int(self.pix_pos_for_animation.x),
                                                    int(self.pix_pos_for_animation.y)))
@@ -92,7 +89,6 @@ class Enemy:
                                                    int(self.pix_pos_for_animation.y)))
             self.last_x = self.pix_pos[0]
             self.last_y = self.pix_pos[1]
-            self.image_count += 1
 
         #pygame.draw.circle(self.app.screen, self.colour, (int(self.pix_pos.x), int(self.pix_pos.y)), self.radius)
 
@@ -235,14 +231,4 @@ class Enemy:
             #return 255, 170, 50
 
     def set_personality(self):
-        """
-        if self.number == 0:
-            return "speedy"
-        elif self.number == 1:
-            return "slow"
-        elif self.number == 2:
-            return "random"
-        elif self.number == 3:
-            return "scared"
-        """
         return self.personality_and_speed["personality"]
