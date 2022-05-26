@@ -125,9 +125,6 @@ class App:
         for x in range(HEIGHT//self.cell_height):
             pygame.draw.line(self.background, GREY, (0, x*self.cell_height), (WIDTH, x*self.cell_height))
 
-        #for coin in self.coins:
-        #    pygame.draw.rect(self.background, (255, 200, 0), (coin.x * self.cell_width, coin.y * self.cell_height, self.cell_width, self.cell_height))
-
     def reset(self):
         self.player.lives = 1
         self.player.current_score = 0
@@ -274,18 +271,6 @@ class App:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            '''
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                pygame.mixer.music.load('music/game_start.wav')
-                pygame.mixer.music.play(1)
-                self.state = 'playing'
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-                self.state = 'rules'
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_t:
-                self.state = 'hs_table'
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.state = 'exit'
-            '''
             pygame_widgets.WidgetHandler._widgets.clear()
 
     def start_update(self):
@@ -297,18 +282,8 @@ class App:
 
     def start_draw(self):
         self.screen.fill(BLACK)
-        name = pygame.image.load('images/name.png')
-        self.screen.blit(name, (70, 50))
-        '''  
-        self.draw_text('Play - space bar', self.screen, [WIDTH//2, HEIGHT//2 - 50], START_TEXT_SIZE,
-                       (255, 185, 33), START_FONT, centered=True)
-        self.draw_text('How to play - R', self.screen, [WIDTH // 2, HEIGHT // 2], START_TEXT_SIZE,
-                       (188, 255, 33), START_FONT, centered=True)
-        self.draw_text('High score table - T', self.screen, [WIDTH // 2, HEIGHT // 2 + 50], START_TEXT_SIZE,
-                       (48, 255, 33), START_FONT, centered=True)
-        self.draw_text('Exit - Esc', self.screen, [WIDTH // 2, HEIGHT // 2 + 100], START_TEXT_SIZE,
-                       (33, 255, 137), START_FONT, centered=True)
-        '''
+        name = pygame.image.load('images/name2.png')
+        self.screen.blit(name, (120, 50))
         events = pygame.event.get()
         pygame_widgets.update(events)
         pygame.display.update() 
@@ -353,7 +328,6 @@ class App:
     
         self.draw_coins()
         self.draw_big_coins()
-        # self.draw_grid()
         self.draw_text('Current score: {}'.format(self.player.current_score), self.screen, [50, 0], 16, WHITE, START_FONT)
         self.draw_text('High score: {}'.format(self.leaders_list[len(self.leaders_list) - 1]["result"]), self.screen, [WIDTH//2 + 150, 0], 16, WHITE, START_FONT)
         self.player.draw()
@@ -501,30 +475,15 @@ class App:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False   
-            #if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            #   self.reset()
-            ''''
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.state = 'exit'
-            '''
             pygame_widgets.WidgetHandler._widgets.clear()
             
 
     def game_over_update(self):
-        #self.add_button_exit(WIDTH // 2 - 120, HEIGHT// 1.5 )
-        #self.add_button_play(WIDTH // 2 - 120, HEIGHT// 2 )
         pass
 
     def game_over_draw(self):
         self.screen.fill(BLACK)
         pygame_widgets.WidgetHandler._widgets.clear()
-        '''
-        quit_text = "Escape - quit"
-        again_text = "Space - play again"
-        self.draw_text("GAME OVER", self.screen, [WIDTH//2, 100], 52, RED, START_FONT, centered=True)
-        self.draw_text(again_text, self.screen, [WIDTH//2, HEIGHT//2], 36, (189, 189, 189), START_FONT, centered=True)
-        self.draw_text(quit_text, self.screen, [WIDTH//2, HEIGHT//1.5], 36, (189, 189, 189), START_FONT, centered=True)
-        '''
         self.draw_text("GAME OVER", self.screen, [WIDTH//2, 100], 52, RED, START_FONT, centered=True)
         self.player.draw_die()
         self.add_button_exit(WIDTH // 2 - 100, HEIGHT//1.5)

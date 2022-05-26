@@ -23,6 +23,8 @@ class Enemy:
         self.eaten = False  # съели
         self.speed = self.set_speed()
         self.image_count = 0
+        self.last_y = self.pix_pos[0]
+        self.last_x = self.pix_pos[1]
 
 
     def update(self):
@@ -75,8 +77,21 @@ class Enemy:
         if not self.eatable and not self.eaten:
             if self.image_count >= 39:
                 self.image_count = 0
-            self.app.screen.blit(self.colour[self.image_count // 5], (int(self.pix_pos_for_animation.x),
-                                                                      int(self.pix_pos_for_animation.y)))
+            print(self.last_x - self.pix_pos[0])
+            if self.last_x - self.pix_pos[0] < 0:
+                self.app.screen.blit(self.colour[1], (int(self.pix_pos_for_animation.x),
+                                                   int(self.pix_pos_for_animation.y)))
+            elif self.last_x - self.pix_pos[0] > 0:
+                self.app.screen.blit(self.colour[5], (int(self.pix_pos_for_animation.x),
+                                                   int(self.pix_pos_for_animation.y)))
+            elif self.last_y - self.pix_pos[1] < 0:
+                self.app.screen.blit(self.colour[3], (int(self.pix_pos_for_animation.x),
+                                                   int(self.pix_pos_for_animation.y)))
+            elif self.last_y - self.pix_pos[1] > 0:
+                self.app.screen.blit(self.colour[7], (int(self.pix_pos_for_animation.x),
+                                                   int(self.pix_pos_for_animation.y)))
+            self.last_x = self.pix_pos[0]
+            self.last_y = self.pix_pos[1]
             self.image_count += 1
 
         #pygame.draw.circle(self.app.screen, self.colour, (int(self.pix_pos.x), int(self.pix_pos.y)), self.radius)
@@ -192,10 +207,10 @@ class Enemy:
 
     def set_colour(self):
         if self.personality == "speedy":
-            blue = [pygame.image.load('images/p_10.png'), pygame.image.load('images/p_11.png'),
-                    pygame.image.load('images/p_12.png'), pygame.image.load('images/p_13.png'),
-                    pygame.image.load('images/p_14.png'), pygame.image.load('images/p_15.png'),
-                    pygame.image.load('images/p_16.png'), pygame.image.load('images/p_17.png')]
+            blue = [pygame.image.load('images/p_10.png'), pygame.image.load('images/p_11.png'),#right
+                    pygame.image.load('images/p_12.png'), pygame.image.load('images/p_13.png'),#down
+                    pygame.image.load('images/p_14.png'), pygame.image.load('images/p_15.png'),#left
+                    pygame.image.load('images/p_16.png'), pygame.image.load('images/p_17.png')]#up
             return blue
         if self.personality == "slow":
             #return 0, 255, 0
