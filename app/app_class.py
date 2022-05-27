@@ -2,6 +2,7 @@ import json
 import sys
 import pygame_widgets
 from pygame_widgets.button import Button
+from app.button import AppButton
 from mobs.player_class import *
 from mobs.enemy_class import *
 from mobs.leaders_class import Leader
@@ -28,16 +29,15 @@ class App:
         self.p_pos = None
         self.ghost_personalities = None
         self.background = None
-        pygame.mixer.music.set_volume(0.5)
-
+        self.buttons = AppButton()
+        
         with open("settings/data_file.json", "r") as read_file:
             self.leaders_list = json.load(read_file)
         self.lead = Leader(self.leaders_list)
-
+        
         self.load()
         self.player = Player(self, vec(self.p_pos))
         self.make_enemies()
-     
 
     def run(self):
         while self.running:
@@ -61,7 +61,6 @@ class App:
 
             elif self.state == 'game over':
                 self.game_over_events()
-                self.game_over_update()
                 self.game_over_draw()
             
             elif self.state == 'win':
@@ -80,7 +79,6 @@ class App:
 
     ############################# Помогающие функции ###################################
 
-
     def draw_text(self, words, screen, position, size, colour, font_name, centered=False):
         font = pygame.font.SysFont(font_name, size)
         text = font.render(words, False, colour)
@@ -94,8 +92,6 @@ class App:
         self.background = pygame.image.load('images/background.png')
         self.background = pygame.transform.scale(self.background, (MAZE_WIDTH, MAZE_HEIGHT))
 
-        # Загрузка карты с фалйа
-        # Создание стен с координатами
         with open("settings/walls.txt", 'r') as file:
             for yIdx, line in enumerate(file):
                 for xIdx, char in enumerate(line):
@@ -112,7 +108,6 @@ class App:
                     elif char == "B":
                         pygame.draw.rect(self.background, BLACK, (xIdx*self.cell_width, yIdx*self.cell_width,
                                                                   self.cell_width, self.cell_height))
-        # print(self.walls)
 
     def make_enemies(self):
         with open('settings/ghost_personality.json') as personalities:
@@ -141,109 +136,13 @@ class App:
             enemy.direction *= 0
 
         self.coins = []
-        with open("walls.txt", 'r') as file:
+        with open("settings/walls.txt", 'r') as file:
             for yidx, line in enumerate(file):
                 for xidx, char in enumerate(line):
                     if char == 'C':
                         self.coins.append(vec(xidx, yidx))
         self.state = "playing"
-        
-    def add_button_play(self, h, w):
-        button_play = Button(self.screen,
-                             h,
-                             w,
-                             200,
-                             45,
-                             text='play',
-                             textColour=PLAYER_COLOR,
-                             font=pygame.font.Font('fonts/emulogic.ttf', 23),
-                             fontSize=23,
-                             margin=20,
-                             inactiveColour=BLACK,
-                             hoverColour=BLUE,
-                             pressedColour=BLUE,
-                             onClick=self.button_play)
     
-    def add_button_hs_table(self, h, w):
-        button_hs_table = Button(self.screen,
-                                 h,
-                                 w,
-                                 200,
-                                 45,
-                                 text='hs table',
-                                 textColour=PLAYER_COLOR,
-                                 font=pygame.font.Font('fonts/emulogic.ttf', 23),
-                                 fontSize=23,
-                                 margin=20,
-                                 inactiveColour=BLACK,
-                                 hoverColour=BLUE,
-                                 pressedColour=BLUE,
-                                 onClick=self.button_hs_table)
-    
-    def add_button_rules(self, h, w):
-        button_rules = Button(self.screen,
-                              h,
-                              w,
-                              200,
-                              45,
-                              text='rules',
-                              textColour=PLAYER_COLOR,
-                              font=pygame.font.Font('fonts/emulogic.ttf', 23),
-                              fontSize=23,
-                              margin=20,
-                              inactiveColour=BLACK,
-                              hoverColour=BLUE,
-                              pressedColour=BLUE,
-                              onClick=self.button_rules)
-    
-    def add_button_exit(self, h, w):
-        button_exit = Button(self.screen,
-                             h,
-                             w,
-                             200,
-                             45,
-                             text='exit',
-                             textColour=PLAYER_COLOR,
-                             font=pygame.font.Font('fonts/emulogic.ttf', 23),
-                             fontSize=23,
-                             margin=20,
-                             inactiveColour=BLACK,
-                             hoverColour=BLUE,
-                             pressedColour=BLUE,
-                             onClick=self.button_exit)
-    
-    def add_button_back(self, h, w):
-        button_back = Button(self.screen,
-                             h,
-                             w,
-                             200,
-                             45,
-                             text='back',
-                             textColour=PLAYER_COLOR,
-                             font=pygame.font.Font('fonts/emulogic.ttf', 23),
-                             fontSize=23,
-                             margin=20,
-                             inactiveColour=BLACK,
-                             hoverColour=BLUE,
-                             pressedColour=BLUE,
-                             onClick=self.button_back)
-        
-    def add_button_play_again(self, h, w):
-        button_play_again = Button(self.screen,
-                                   h,
-                                   w,
-                                   220,
-                                   45,
-                                   text='play again',
-                                   textColour=PLAYER_COLOR,
-                                   font=pygame.font.Font('fonts/emulogic.ttf', 23),
-                                   fontSize=23,
-                                   margin=20,
-                                   inactiveColour=BLACK,
-                                   hoverColour=BLUE,
-                                   pressedColour=BLUE,
-                                   onClick=self.button_play_again)
-        
     def button_play_again(self):
         self.reset()
         
@@ -264,10 +163,7 @@ class App:
     def button_rules(self):
         self.state = 'rules'
 
-
-    ############################# Функции для интро ###################################
-
-
+    ############################# Функции для интро ##################################        
     def start_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -275,11 +171,10 @@ class App:
             pygame_widgets.WidgetHandler._widgets.clear()
 
     def start_update(self):
-        self.add_button_rules(WIDTH/2 - 100, HEIGHT - 260)
-        self.add_button_exit(WIDTH/2 - 100, HEIGHT - 190)
-        self.add_button_play(WIDTH/2 - 100, HEIGHT - 400)
-        self.add_button_hs_table(WIDTH/2 - 100, HEIGHT - 330)
-        #pass
+        self.buttons.add_button_rules(WIDTH/2 - 100, HEIGHT - 260, self.screen, self)
+        self.buttons.add_button_exit(WIDTH/2 - 100, HEIGHT - 190, self.screen, self)
+        self.buttons.add_button_play(WIDTH/2 - 100, HEIGHT - 400, self.screen, self)
+        self.buttons.add_button_hs_table(WIDTH/2 - 100, HEIGHT - 330, self.screen, self)
 
     def start_draw(self):
         self.screen.fill(BLACK)
@@ -306,7 +201,6 @@ class App:
                     self.player.move(vec(0, 1)) 
                 if event.key == pygame.K_RIGHT:
                     self.player.move(vec(1, 0)) 
-
 
     def playing_update(self):
         self.player.update()
@@ -335,8 +229,6 @@ class App:
         for enemy in self.enemies:
             enemy.draw()
         pygame.display.update()
-        
-        
 
     def remove_life(self):
         self.player.lives -= 1
@@ -358,7 +250,6 @@ class App:
                 enemy.pix_pos_for_animation = enemy.get_pix_pos_for_animation()
                 enemy.direction *= 0
 
-
     def draw_coins(self):
         for coin in self.coins:
             pygame.draw.circle(self.screen, (200, 200, 10),
@@ -371,9 +262,7 @@ class App:
                                (int(coin.x * self.cell_width) + self.cell_width//2 + TOP_BOTTOM_BUFFER//2,
                                 int(coin.y * self.cell_height) + self.cell_height//2 + TOP_BOTTOM_BUFFER//2), 8)
 
-
     ############################# Функции для правил ###################################
-
 
     def rules_events(self):
         for event in pygame.event.get():
@@ -426,15 +315,13 @@ class App:
         self.draw_text('>>.', self.screen, [170, 200], 26, WHITE, START_FONT)
         #self.draw_text('back to main menu - esc', self.screen, [50, 630],13, WHITE, START_FONT)
         #self.draw_text('play - space bar', self.screen, [WIDTH//2 + 150, 630], 13, WHITE, START_FONT)
-        self.add_button_back(50, 600)
-        self.add_button_play(370, 600)
+        self.buttons.add_button_back(50, 600, self.screen, self)
+        self.buttons.add_button_play(370, 600, self.screen, self)
         events = pygame.event.get()
         pygame_widgets.update(events)
         pygame.display.update()
 
-
     ############################# Функции для таблицы рекордов ###################################
-
 
     def hs_table_events(self):
         for event in pygame.event.get():
@@ -462,15 +349,13 @@ class App:
             self.draw_text(str(self.leaders_list[i]["result"]), self.screen, [350, count], 16,  color, START_FONT)
             self.draw_text('_____________________________________________________', self.screen, [40, count + 15], 16, WHITE, START_FONT)
             count += 40
-        self.add_button_back(50, 600)
-        self.add_button_play(370, 600)
+        self.buttons.add_button_back(50, 600, self.screen, self)
+        self.buttons.add_button_play(370, 600, self.screen, self)
         events = pygame.event.get()
         pygame_widgets.update(events)
         pygame.display.update()
 
-
     ############################# Функции для проигрыша ###################################
-
 
     def game_over_events(self):
         for event in pygame.event.get():
@@ -478,17 +363,13 @@ class App:
                 self.running = False   
             pygame_widgets.WidgetHandler._widgets.clear()
             
-
-    def game_over_update(self):
-        pass
-
     def game_over_draw(self):
         self.screen.fill(BLACK)
         pygame_widgets.WidgetHandler._widgets.clear()
         self.draw_text("GAME OVER", self.screen, [WIDTH//2, 100], 52, RED, START_FONT, centered=True)
         self.player.draw_die()
-        self.add_button_exit(WIDTH // 2 - 100, HEIGHT//1.5)
-        self.add_button_play_again(WIDTH // 2 - 110, HEIGHT//2)
+        self.buttons.add_button_exit(WIDTH // 2 - 100, HEIGHT//1.5, self.screen, self)
+        self.buttons.add_button_play_again(WIDTH // 2 - 110, HEIGHT//2, self.screen, self)
         events = pygame.event.get()
         pygame_widgets.update(events)
         pygame.display.update()

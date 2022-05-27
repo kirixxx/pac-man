@@ -64,10 +64,11 @@ class Player:
             self.image_count += 1
 
     def draw(self):
-        if self.image_count == 9:
+        if self.image_count == 9 or self.image_count > 9:
             self.image_count = 0
         if self.direction == vec(-1, 0): 
             self.image_count += 1
+            print(self.image_count)
             self.app.screen.blit(self.player_img_left[self.image_count // 5], self.pix_pos_for_animation)
         elif self.direction == vec(1, 0):
             self.image_count += 1
